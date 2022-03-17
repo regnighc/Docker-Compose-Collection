@@ -1,0 +1,111 @@
+version: '3.6'
+
+networks:
+  macvlan_network:
+    driver: macvlan
+    driver_opts:
+      parent: enp0s25 # Set to your physical NIC 
+    ipam:
+      config:
+        - subnet: 192.168.2.0/24 # Set to your lan subnet
+          gateway: 192.168.2.253 # Set to your lan gateway   
+services:
+  jackett:
+    container_name: jackett
+    environment:
+      AUTO_UPDATE: "true"
+      PGID: '1000' # Obtain your IDs with the command 'id admin'
+      PUID: '1000' # Obtain your IDs with the command 'id admin'
+      RUN_OPTS: 
+      TZ: Europe/London # Set your Timezone
+    image: ghcr.io/linuxserver/jackett
+    ports:
+     - 9117:9117
+    restart: unless-stopped
+    volumes:
+    - /docker/media_stack/jackett/config:/config:rw # Set your storage volumes
+    - /docker/media_stack/jackett/downloads:/downloads:rw # Set your storage volumes
+
+  radarr:
+    container_name: radarr
+    environment:
+      PGID: '1000' # Obtain your IDs with the command 'id admin'
+      PUID: '1000' # Obtain your IDs with the command 'id admin'
+      TZ: Europe/London # Set your Timezone
+      UMASK_SET: '022'
+    image: ghcr.io/linuxserver/radarr
+    ports:
+     - 7879:7878
+    restart: unless-stopped
+    volumes:
+    - /docker/media_stack/radarr/config:/config:rw # Set your storage volumes
+    - /media/External/media_stack/downloads:/downloads:rw # Set your storage volumes
+    - /media/External/media_stack/movies:/movies:rw # Set your storage volumes
+
+  sonarr:
+    container_name: sonarr
+    environment:
+      PGID: '1000' # Obtain your IDs with the command 'id admin'
+      PUID: '1000' # Obtain your IDs with the command 'id admin'
+      TZ: Europe/London # Set your Timezone
+      UMASK_SET: '022'
+    image: ghcr.io/linuxserver/sonarr
+    ports:
+     - 8889:8989
+    restart: unless-stopped
+    volumes:
+    - /docker/media_stack/sonarr/config:/config:rw # Set your storage volumes
+    - /media/External/media_stack/downloads:/downloads:rw # Set your storage volumes
+    - /media/External/media_stack/tv:/tv:rw # Set your storage volumes
+
+  transmission:
+    image: lscr.io/linuxserver/transmission
+    container_name: transmission
+    environment:
+      - PUID=1000 # Obtain your IDs with the command 'id admin'
+      - PGID=1000 # Obtain your IDs with the command 'id admin'
+      - TZ=Europe/London # Set your Timezone
+      - TRANSMISSION_WEB_HOME=/transmission-web-control/ #optional
+      - USER=user #optional
+      - PASS=password #optional
+      - WHITELIST= #optional
+      - HOST_WHITELIST= #optional
+    volumes:
+      - /docker/media_stack/transmission/config:/config # Set your storage volumes
+      - /media/External/media_stack/downloads:/downloads # Set your storage volumes
+      - /media/External/media_stack/watch:/watch # Set your storage volumes
+    ports:
+      - 9091:9091
+      - 51413:51413
+      - 51413:51413/udp
+    restart: unless-stopped
+
+  plex:
+    image: plexinc/pms-docker
+    container_name: plexms
+    networks:
+      # Same name of network defined above
+      macvlan_network:
+        ipv4_address: 192.168.2.189 # Set and IP on your LAN which is reserved and will not conflict
+    environment:
+      - PLEX_UID=998 # Obtain your IDs with the command 'id admin'
+      - PLEX_GID=100 # Obtain your IDs with the command 'id admin'
+      - TZ=Europe/London # Set your Timezone
+    # - PLEX_CLAIM=CLAIMCODEHERE # Uncomment and add a claim code here ont he first run only, afterwhich you should comment this out https://www.plex.tv/claim/
+      - HOSTNAME=jmi-server # Set yor desired Plex server name
+      - ADVERTISE_IP=http://192.168.2.189:32400/,https://plex.jmitech.xyz/ # Set your URLS seperated by comma, this is important to ensure proper Direct and External operation
+    volumes:
+      - /docker/plexms/config:/config # Set your storage volumes
+      - /docker/plexms/transcode:/transcode # Set your storage volumes
+      - /media/External:/media # Set your storage volumes
+    ports:
+      - 32400:32400
+      - 3005:3005
+      - 8324:8324
+      - 32469:32469
+      - 1900:1900/udp
+      - 32410:32410/udp
+      - 32412:32412/udp
+      - 32413:32413/udp
+      - 32414:32414/udp
+    restart: unless-stopped

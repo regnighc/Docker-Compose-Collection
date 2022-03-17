@@ -91,7 +91,7 @@ services:
       - PLEX_UID=998 # Obtain your IDs with the command 'id admin'
       - PLEX_GID=100 # Obtain your IDs with the command 'id admin'
       - TZ=Europe/London # Set your Timezone
-    # - PLEX_CLAIM=CLAIMCODEHERE # Uncomment and add a claim code here ont he first run only, afterwhich you should comment this out https://www.plex.tv/claim/
+    # - PLEX_CLAIM=CLAIMCODEHERE # Uncomment and add a claim code here on the first run only, afterwhich you should comment this out https://www.plex.tv/claim/
       - HOSTNAME=jmi-server # Set yor desired Plex server name
       - ADVERTISE_IP=http://192.168.2.189:32400/,https://plex.jmitech.xyz/ # Set your URLS seperated by comma, this is important to ensure proper Direct and External operation
     volumes:

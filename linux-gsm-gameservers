@@ -1,0 +1,67 @@
+version: '3.4'
+services:
+
+  linuxgsm1: # Increment number when adding a new server
+    container_name: linuxgsm_mohaaserver # update new contianer name
+    environment:
+      GAMESERVER: mohaaserver # chose the game server
+      LGSM_GITHUBBRANCH: master
+      LGSM_GITHUBREPO: LinuxGSM
+      LGSM_GITHUBUSER: GameServerManagers
+    image: gameservermanagers/linuxgsm-docker
+    ports:
+      - 12203:12203/udp
+      - 12300:12300/udp
+      - 6500:6500/udp
+      - 6515:6516/udp
+      - 13139:13139/udp
+      - 27900:27900/udp
+      - 6667:6667/udp
+      - 28900:28900
+      - 29900:29900
+      - 29901:29901
+    restart: unless-stopped
+    volumes:
+    - /media/External/linuxgsm/serverfiles:/home/linuxgsm/lgsm/config-lgsm:rw
+    - /media/External/linuxgsm/serverfiles:/home/linuxgsm/log:rw
+    - /media/External/linuxgsm/serverfiles:/home/linuxgsm/serverfiles:rw
+
+  linuxgsm2:
+    container_name: linuxgsm_mcserver
+    environment:
+      GAMESERVER: mcserver
+      LGSM_GITHUBBRANCH: master
+      LGSM_GITHUBREPO: LinuxGSM
+      LGSM_GITHUBUSER: GameServerManagers
+    image: gameservermanagers/linuxgsm-docker
+    ports:
+      - 25565:25565
+      - 19132:19132/udp
+      - 19133:19133/udp
+      - 25565:25565/udp
+    restart: unless-stopped
+    volumes:
+    - /media/External/linuxgsm/serverfiles:/home/linuxgsm/lgsm/config-lgsm:rw
+    - /media/External/linuxgsm/serverfiles:/home/linuxgsm/log:rw
+    - /media/External/linuxgsm/serverfiles:/home/linuxgsm/serverfiles:rw
+
+  linuxgsm3:
+    container_name: linuxgsm_vhserver
+    environment:
+      GAMESERVER: vhserver
+      LGSM_GITHUBBRANCH: master
+      LGSM_GITHUBREPO: LinuxGSM
+      LGSM_GITHUBUSER: GameServerManagers
+    image: gameservermanagers/linuxgsm-docker
+    ports:
+      - 2456:2456/udp
+      - 2457:2457/udp
+      - 2458:2458/udp
+      - 2456:2456
+      - 2457:2457
+      - 2458:2458
+    restart: unless-stopped
+    volumes:
+    - /media/External/linuxgsm/serverfiles:/home/linuxgsm/lgsm/config-lgsm:rw
+    - /media/External/linuxgsm/serverfiles:/home/linuxgsm/log:rw
+    - /media/External/linuxgsm/serverfiles:/home/linuxgsm/serverfiles:rw

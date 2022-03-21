@@ -1,0 +1,29 @@
+{
+     "settings": [
+{
+             "provider": "namecheap",
+             "domain": "mydomain.com",
+             "host": "HOST1",
+             "ip_method": "provider",
+             "delay": 300,
+             "password": "redacted"
+         },
+ {
+             "provider": "namecheap",
+             "domain": "mydomain.com",
+             "host": "HOST2",
+             "ip_method": "provider",
+             "delay": 300,
+             "password": "redacted"
+         },
+ {
+             "provider": "namecheap",
+             "domain": "mydomain.com",
+             "host": "HOST3",
+             "ip_method": "provider",
+             "delay": 300,
+             "password": "redacted"
+         }
+
+     ]
+ }
